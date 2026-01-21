@@ -1,0 +1,23 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User, Column, Card, Comment, RefreshToken } from './entities';
+
+import { AuthModule } from './auth/auth.module';
+
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '5432', 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [User, Column, Card, Comment, RefreshToken],
+      synchronize: true, // for dev
+      autoLoadEntities: false,
+    }),
+    AuthModule,
+  ],
+})
+export class AppModule {}
