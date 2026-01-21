@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Patch,
   Delete,
   Param,
@@ -12,7 +11,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { DeleteUserDto } from '../dto/delete-user.dto';
@@ -58,7 +62,10 @@ export class UsersController {
   @Delete(':id')
   @ApiOperation({ summary: 'Delete account' })
   @ApiResponse({ status: 204, description: 'Account was deleted' })
-  async deleteAccount(@Body() deleteUserDto: DeleteUserDto, @Request() req: any) {
+  async deleteAccount(
+    @Body() deleteUserDto: DeleteUserDto,
+    @Request() req: any,
+  ) {
     return this.userService.deleteAccount(req.user.userId, deleteUserDto);
   }
 }

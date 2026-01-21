@@ -10,6 +10,10 @@ import { Card } from './card.entity';
 
 @Entity('columns')
 export class ColumnEntity {
+  // Alias for backward compatibility
+  static get Column() {
+    return ColumnEntity;
+  }
   @PrimaryGeneratedColumn()
   id: number;
 

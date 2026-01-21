@@ -4,6 +4,8 @@ import { User, Column, Card, Comment, RefreshToken } from './entities';
 
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ColumnsModule } from './columns/columns.module';
+import { CardsModule } from './cards/cards.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
+    ColumnsModule,
+    CardsModule,
   ],
 })
 export class AppModule {}
