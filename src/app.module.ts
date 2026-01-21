@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, Column, Card, Comment, RefreshToken } from './entities';
 
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: false,
     }),
     AuthModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

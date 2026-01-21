@@ -1,7 +1,6 @@
 import {
   Body,
   Post,
-  Req,
   UseGuards,
   Controller,
   Request,
@@ -33,11 +32,3 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  @ApiOperation({ summary: 'get user profile' })
-  getProfile(@Request() req: any) {
-    return req.user;
-  }
-}
