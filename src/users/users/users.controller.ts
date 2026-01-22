@@ -3,11 +3,8 @@ import {
   Get,
   Patch,
   Delete,
-  Param,
   Body,
   Request,
-  ForbiddenException,
-  ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -29,38 +26,29 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all users' })
-  findAll() {
-    return this.userService.findAll();
+  @ApiOperation({ summary: 'Get current user profile' })
+  getCurrentUser(@Request() req: any) {
+    return this.userService.findOne(req.user.userId);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get user by id' })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.findOne(id);
+  @Get('columns')
+  @ApiOperation({ summary: 'Get current user columns' })
+  getUserColumns(@Request() req: any) {
+    return this.userService.findUserColumns(req.user.userId);
   }
 
-  @Get('id/columns')
-  @ApiOperation({ summary: 'Get user columns' })
-  findUserColumns(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
-    if (id !== req.user.userId) {
-      throw new ForbiddenException('Access denied');
-    }
-    return this.userService.findUserColumns(id);
+  @Patch()
+  @ApiOperation({ summary: 'Update current user profile' })
+  update(@Body() updateUserDto: UpdateUserDto, @Request() req: any) {
+    return this.userService.update(
+      req.user.userId,
+      updateUserDto,
+      req.user.userId,
+    );
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update user profile' })
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-    @Request() req: any,
-  ) {
-    return this.userService.update(id, updateUserDto, req.user.userId);
-  }
-
-  @Delete(':id')
-  @ApiOperation({ summary: 'Delete account' })
+  @Delete()
+  @ApiOperation({ summary: 'Delete current user account' })
   @ApiResponse({ status: 204, description: 'Account was deleted' })
   async deleteAccount(
     @Body() deleteUserDto: DeleteUserDto,

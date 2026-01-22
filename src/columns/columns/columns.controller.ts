@@ -20,12 +20,12 @@ import { UpdateColumnDto } from '../dto/number-column.dto';
 @ApiTags('columns')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller('columns')
+@Controller('users/columns')
 export class ColumnController {
   constructor(private readonly columnsService: ColumnsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create column' })
+  @ApiOperation({ summary: 'Create column for current user' })
   create(
     @Body(ValidationPipe) createColumnDto: CreateColumnDto,
     @Request() req: any,
@@ -34,19 +34,19 @@ export class ColumnController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all columns' })
+  @ApiOperation({ summary: 'Get all columns for current user' })
   findAll(@Request() req: any) {
     return this.columnsService.findAll(req.user.userId);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get certain column' })
+  @ApiOperation({ summary: 'Get specific column for current user' })
   findOne(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
     return this.columnsService.findOne(id, req.user.userId);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update column' })
+  @ApiOperation({ summary: 'Update column for current user' })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateColumnDto: UpdateColumnDto,
@@ -56,7 +56,7 @@ export class ColumnController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete column (cascade cards/comments)' })
+  @ApiOperation({ summary: 'Delete column for current user (cascade cards/comments)' })
   remove(@Param('id', ParseIntPipe) id: number, @Request() req: any) {
     return this.columnsService.remove(id, req.user.userId);
   }
