@@ -1,10 +1,23 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Request,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from '../dto/create-card.dto';
 import { OwnerGuard } from '../../columns/guards/owner.guard';
 import { UpdateCardDto } from '../dto/update-card.dto';
+import type { AuthenticatedRequest } from '../../interfaces/auth.types';
 
 @ApiTags('cards')
 @ApiBearerAuth()
@@ -19,7 +32,7 @@ export class CardsController {
   create(
     @Body(ValidationPipe) createCardDto: CreateCardDto,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.cardsService.create(createCardDto, columnId, req.user.userId);
   }
@@ -29,7 +42,7 @@ export class CardsController {
   @UseGuards(OwnerGuard)
   findAll(
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.cardsService.findAll(columnId, req.user.userId);
   }
@@ -40,7 +53,7 @@ export class CardsController {
   findOne(
     @Param('id', ParseIntPipe) id: number,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.cardsService.findOne(id, columnId, req.user.userId);
   }
@@ -52,9 +65,14 @@ export class CardsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCardDto: UpdateCardDto,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
-    return this.cardsService.update(id, updateCardDto, columnId, req.user.userId);
+    return this.cardsService.update(
+      id,
+      updateCardDto,
+      columnId,
+      req.user.userId,
+    );
   }
 
   @Delete(':id')
@@ -63,7 +81,7 @@ export class CardsController {
   remove(
     @Param('id', ParseIntPipe) id: number,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.cardsService.remove(id, columnId, req.user.userId);
   }

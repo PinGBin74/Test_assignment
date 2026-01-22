@@ -4,6 +4,10 @@ import { CreateCommentDto } from '../dto/create-comment.dto';
 import { Card, Comment } from 'src/entities';
 import { Repository } from 'typeorm';
 
+/**
+ * Service for managing comments on cards.
+ * Provides CRUD operations for comments.
+ */
 @Injectable()
 export class CommentsService {
   constructor(
@@ -13,6 +17,13 @@ export class CommentsService {
     private cardRepository: Repository<Card>,
   ) {}
 
+  /**
+   * Creates a new comment on a card.
+   * @param createCommentDto - Comment data to create
+   * @param cardId - ID of the card to comment on
+   * @param userId - ID of the user creating the comment
+   * @returns Created comment entity
+   */
   async create(
     createCommentDto: CreateCommentDto,
     cardId: number,

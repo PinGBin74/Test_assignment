@@ -12,6 +12,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LocalAuthGuard } from './guards/local.guard';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { LoginDto } from './dto/login.dto';
+import type { AuthenticatedRequest } from '../interfaces/auth.types';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -37,7 +38,7 @@ export class AuthController {
   @Get('profile')
   @ApiOperation({ summary: 'Get user profile' })
   @ApiResponse({ status: 200, description: 'Profile retrieved' })
-  async profile(@Request() req: any) {
+  async profile(@Request() req: AuthenticatedRequest) {
     return this.authService.getProfile(req.user.userId);
   }
 }

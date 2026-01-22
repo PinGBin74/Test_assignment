@@ -47,7 +47,7 @@ export class UsersService {
       user.email = UpdateUserDto.email;
     }
     if (UpdateUserDto.password) {
-      user.password = await bcrypt.hash(UpdateUserDto.password, 15);
+      user.password = await bcrypt.hash(UpdateUserDto.password, 10);
     }
     return this.userRepository.save(user);
   }
