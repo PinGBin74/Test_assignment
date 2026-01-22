@@ -70,3 +70,7 @@ src/
 ├── entities/            # Database entities
 └── interfaces/          # TypeScript interfaces
 ```
+
+
+### 📸 Database diagram
+![Database diagram](docs/dbdiagram.png)
