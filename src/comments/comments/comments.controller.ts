@@ -15,6 +15,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
 import { OwnerGuard } from '../../columns/guards/owner.guard';
+import { CommentOwnerGuard } from '../guards/comment-owner.guard';
 import type { AuthenticatedRequest } from '../../interfaces/auth.types';
 
 @ApiTags('comments')
@@ -53,7 +54,7 @@ export class CommentsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get specific comment for card' })
-  @UseGuards(OwnerGuard)
+  @UseGuards(CommentOwnerGuard)
   findOne(
     @Param('id', ParseIntPipe) id: number,
     @Param('cardId', ParseIntPipe) cardId: number,
@@ -65,7 +66,7 @@ export class CommentsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete comment' })
-  @UseGuards(OwnerGuard)
+  @UseGuards(CommentOwnerGuard)
   remove(
     @Param('id', ParseIntPipe) id: number,
     @Param('cardId', ParseIntPipe) cardId: number,

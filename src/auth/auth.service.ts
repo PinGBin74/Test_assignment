@@ -25,8 +25,6 @@ export class AuthService {
    * @param registerDto - User registration data with email and password
    * @returns JWT tokens (access and refresh) for the new user
    */
-  async register(registerDto: RegisterDto) {
-    const { email, password } = registerDto;
 
   async register(registerDto: RegisterDto) {
     const { email, password } = registerDto;

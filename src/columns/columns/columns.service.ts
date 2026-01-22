@@ -4,6 +4,7 @@ import { User } from 'src/entities';
 import { ColumnEntity } from 'src/entities/column.entity';
 import { Repository } from 'typeorm';
 import { CreateColumnDto } from '../dto/create-column.dto';
+import { UpdateColumnDto } from '../dto/number-column.dto';
 
 /**
  * Service for managing user columns.
@@ -73,6 +74,22 @@ export class ColumnsService {
     const column = await this.findOne(id, userId);
     await this.columnRepository.remove(column);
   }
+  /**
+   * Update certain column
+   * @param id
+   * @param updateColumnDto
+   * @param userId
+   * @returns
+   */
+  async update(
+    id: number,
+    updateColumnDto: UpdateColumnDto,
+    userId: number,
+  ): Promise<ColumnEntity> {
+    const column = await this.findOne(id, userId);
+    Object.assign(column, updateColumnDto);
+    return this.columnRepository.save(column);
+  }
 
   /**
    * Retrieves all columns with cards for a user.
@@ -85,3 +102,4 @@ export class ColumnsService {
       relations: ['cards'],
     });
   }
+}
