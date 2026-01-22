@@ -12,6 +12,9 @@ export class Comment {
   @Column()
   cardId: number;
 
+  @Column()
+  userId: number;
+
   @Column({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',

@@ -14,12 +14,12 @@ export class CardsService {
     @InjectRepository(ColumnEntity)
     private columnRepositoy: Repository<ColumnEntity>,
   ) {}
-  async create(createCardDto: CreateCardDto, columnId: number): Promise<Card> {
+  async create(createCardDto: CreateCardDto, columnId: number, userId: number): Promise<Card> {
     const column = await this.columnRepositoy.findOne({
-      where: { id: columnId },
+      where: { id: columnId, userId },
     });
     if (!column) {
-      throw new NotFoundException('Column was not found');
+      throw new NotFoundException('Column was not found or access denied');
     }
     const card = this.cardRepository.create({
       ...createCardDto,
@@ -28,7 +28,15 @@ export class CardsService {
     return this.cardRepository.save(card);
   }
 
-  async findAll(columnId: number): Promise<Card[]> {
+  async findAll(columnId: number, userId: number): Promise<Card[]> {
+    // Verify column belongs to user
+    const column = await this.columnRepositoy.findOne({
+      where: { id: columnId, userId },
+    });
+    if (!column) {
+      throw new NotFoundException('Column was not found or access denied');
+    }
+    
     return this.cardRepository.find({
       where: { columnId },
       order: { position: 'ASC' },
@@ -36,9 +44,17 @@ export class CardsService {
     });
   }
 
-  async findOne(id: number, columnId: number): Promise<Card> {
+  async findOne(id: number, columnId: number, userId: number): Promise<Card> {
+    // Verify column belongs to user first
+    const column = await this.columnRepositoy.findOne({
+      where: { id: columnId, userId },
+    });
+    if (!column) {
+      throw new NotFoundException('Column was not found or access denied');
+    }
+
     const card = await this.cardRepository.findOne({
-      where: { id, column: { id: columnId } },
+      where: { id, columnId },
       relations: ['comments'],
     });
 
@@ -51,14 +67,15 @@ export class CardsService {
     id: number,
     updateCardDto: UpdateCardDto,
     columnId: number,
+    userId: number,
   ): Promise<Card> {
-    const card = await this.findOne(id, columnId);
+    const card = await this.findOne(id, columnId, userId);
     Object.assign(card, updateCardDto);
     return this.cardRepository.save(card);
   }
 
-  async remove(id: number, columnId: number): Promise<void> {
-    const card = await this.findOne(id, columnId);
+  async remove(id: number, columnId: number, userId: number): Promise<void> {
+    const card = await this.findOne(id, columnId, userId);
     await this.cardRepository.delete(card);
   }
 }
