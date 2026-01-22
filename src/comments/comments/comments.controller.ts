@@ -15,6 +15,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
 import { OwnerGuard } from '../../columns/guards/owner.guard';
+import type { AuthenticatedRequest } from '../../interfaces/auth.types';
 
 @ApiTags('comments')
 @ApiBearerAuth()
@@ -30,9 +31,13 @@ export class CommentsController {
     @Body(ValidationPipe) createCommentDto: CreateCommentDto,
     @Param('cardId', ParseIntPipe) cardId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
-    return this.commentsService.create(createCommentDto, cardId, req.user.userId);
+    return this.commentsService.create(
+      createCommentDto,
+      cardId,
+      req.user.userId,
+    );
   }
 
   @Get()
@@ -41,7 +46,7 @@ export class CommentsController {
   findAll(
     @Param('cardId', ParseIntPipe) cardId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.commentsService.findAll(cardId, req.user.userId);
   }
@@ -53,7 +58,7 @@ export class CommentsController {
     @Param('id', ParseIntPipe) id: number,
     @Param('cardId', ParseIntPipe) cardId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.commentsService.findOne(id, cardId, req.user.userId);
   }
@@ -65,7 +70,7 @@ export class CommentsController {
     @Param('id', ParseIntPipe) id: number,
     @Param('cardId', ParseIntPipe) cardId: number,
     @Param('columnId', ParseIntPipe) columnId: number,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.commentsService.remove(id, cardId, req.user.userId);
   }

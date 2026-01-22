@@ -17,6 +17,7 @@ import {
 import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { DeleteUserDto } from '../dto/delete-user.dto';
+import type { AuthenticatedRequest } from '../../interfaces/auth.types';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -27,19 +28,22 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Get current user profile' })
-  getCurrentUser(@Request() req: any) {
+  getCurrentUser(@Request() req: AuthenticatedRequest) {
     return this.userService.findOne(req.user.userId);
   }
 
   @Get('columns')
   @ApiOperation({ summary: 'Get current user columns' })
-  getUserColumns(@Request() req: any) {
+  getUserColumns(@Request() req: AuthenticatedRequest) {
     return this.userService.findUserColumns(req.user.userId);
   }
 
   @Patch()
   @ApiOperation({ summary: 'Update current user profile' })
-  update(@Body() updateUserDto: UpdateUserDto, @Request() req: any) {
+  update(
+    @Body() updateUserDto: UpdateUserDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
     return this.userService.update(
       req.user.userId,
       updateUserDto,
@@ -52,7 +56,7 @@ export class UsersController {
   @ApiResponse({ status: 204, description: 'Account was deleted' })
   async deleteAccount(
     @Body() deleteUserDto: DeleteUserDto,
-    @Request() req: any,
+    @Request() req: AuthenticatedRequest,
   ) {
     return this.userService.deleteAccount(req.user.userId, deleteUserDto);
   }
